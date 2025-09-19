@@ -248,17 +248,15 @@ class AbProfile {
   String name;
   String owner;
   String? note;
-  dynamic info;
   int rule;
 
-  AbProfile(this.guid, this.name, this.owner, this.note, this.rule, this.info);
+  AbProfile(this.guid, this.name, this.owner, this.note, this.rule);
 
   AbProfile.fromJson(Map<String, dynamic> json)
       : guid = json['guid'] ?? '',
         name = json['name'] ?? '',
         owner = json['owner'] ?? '',
         note = json['note'] ?? '',
-        info = json['info'],
         rule = json['rule'] ?? 0;
 }
 

@@ -140,7 +140,7 @@ class AbModel {
           debugPrint("pull ab list");
           List<AbProfile> abProfiles = List.empty(growable: true);
           abProfiles.add(AbProfile(_personalAbGuid!, _personalAddressBookName,
-              gFFI.userModel.userName.value, null, ShareRule.read.value, null));
+              gFFI.userModel.userName.value, null, ShareRule.read.value));
           // get all address book name
           await _getSharedAbProfiles(abProfiles);
           addressbooks.removeWhere((key, value) =>
@@ -208,7 +208,7 @@ class AbModel {
         return false;
       }
       Map<String, dynamic> json =
-          _jsonDecodeRespMap(decode_http_response(resp), resp.statusCode);
+          _jsonDecodeRespMap(utf8.decode(resp.bodyBytes), resp.statusCode);
       if (json.containsKey('error')) {
         throw json['error'];
       }
@@ -234,7 +234,7 @@ class AbModel {
         return false;
       }
       Map<String, dynamic> json =
-          _jsonDecodeRespMap(decode_http_response(resp), resp.statusCode);
+          _jsonDecodeRespMap(utf8.decode(resp.bodyBytes), resp.statusCode);
       if (json.containsKey('error')) {
         throw json['error'];
       }
@@ -271,7 +271,7 @@ class AbModel {
         headers['Content-Type'] = "application/json";
         final resp = await http.post(uri, headers: headers);
         Map<String, dynamic> json =
-            _jsonDecodeRespMap(decode_http_response(resp), resp.statusCode);
+            _jsonDecodeRespMap(utf8.decode(resp.bodyBytes), resp.statusCode);
         if (json.containsKey('error')) {
           throw json['error'];
         }
@@ -609,7 +609,7 @@ class AbModel {
             if (name == null || guid == null) {
               continue;
             }
-            ab = Ab(AbProfile(guid, name, '', '', ShareRule.read.value, null),
+            ab = Ab(AbProfile(guid, name, '', '', ShareRule.read.value),
                 name == _personalAddressBookName);
           }
           addressbooks[name] = ab;
@@ -765,28 +765,6 @@ class AbModel {
 
   void removePeerUpdateListener(String key) {
     _peerIdUpdateListeners.remove(key);
-  }
-
-  String? getdefaultSharedPassword() {
-    if (current.isPersonal()) {
-      return null;
-    }
-    final profile = current.sharedProfile();
-    if (profile == null) {
-      return null;
-    }
-    try {
-      if (profile.info is Map) {
-        final password = (profile.info as Map)['password'];
-        if (password is String && password.isNotEmpty) {
-          return password;
-        }
-      }
-      return null;
-    } catch (e) {
-      debugPrint("getdefaultSharedPassword: $e");
-      return null;
-    }
   }
 
 // #endregion
@@ -947,7 +925,7 @@ class LegacyAb extends BaseAb {
         peers.clear();
       } else if (resp.body.isNotEmpty) {
         Map<String, dynamic> json =
-            _jsonDecodeRespMap(decode_http_response(resp), resp.statusCode);
+            _jsonDecodeRespMap(utf8.decode(resp.bodyBytes), resp.statusCode);
         if (json.containsKey('error')) {
           throw json['error'];
         } else if (json.containsKey('data')) {
@@ -1005,7 +983,7 @@ class LegacyAb extends BaseAb {
         ret = true;
       } else {
         Map<String, dynamic> json =
-            _jsonDecodeRespMap(decode_http_response(resp), resp.statusCode);
+            _jsonDecodeRespMap(utf8.decode(resp.bodyBytes), resp.statusCode);
         if (json.containsKey('error')) {
           throw json['error'];
         } else if (resp.statusCode == 200) {
@@ -1381,7 +1359,7 @@ class Ab extends BaseAb {
         final resp = await http.post(uri, headers: headers);
         statusCode = resp.statusCode;
         Map<String, dynamic> json =
-            _jsonDecodeRespMap(decode_http_response(resp), resp.statusCode);
+            _jsonDecodeRespMap(utf8.decode(resp.bodyBytes), resp.statusCode);
         if (json.containsKey('error')) {
           throw json['error'];
         }
@@ -1438,7 +1416,7 @@ class Ab extends BaseAb {
       final resp = await http.post(uri, headers: headers);
       statusCode = resp.statusCode;
       List<dynamic> json =
-          _jsonDecodeRespList(decode_http_response(resp), resp.statusCode);
+          _jsonDecodeRespList(utf8.decode(resp.bodyBytes), resp.statusCode);
       if (resp.statusCode != 200) {
         throw 'HTTP ${resp.statusCode}';
       }

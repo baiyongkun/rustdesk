@@ -1491,13 +1491,6 @@ void connectInPeerTab(BuildContext context, Peer peer, PeerTabIndex tab,
         password = peer.password;
         isSharedPassword = true;
       }
-      if (password.isEmpty) {
-        final abPassword = gFFI.abModel.getdefaultSharedPassword();
-        if (abPassword != null) {
-          password = abPassword;
-          isSharedPassword = true;
-        }
-      }
     }
   }
   connect(context, peer.id,

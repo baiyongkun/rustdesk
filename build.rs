@@ -68,8 +68,11 @@ fn install_android_deps() {
     }
     path.push(target);
     println!(
-        "cargo:rustc-link-search={}",
-        path.join("lib").to_str().unwrap()
+        "{}",
+        format!(
+            "cargo:rustc-link-search={}",
+            path.join("lib").to_str().unwrap()
+        )
     );
     println!("cargo:rustc-link-lib=ndk_compat");
     println!("cargo:rustc-link-lib=oboe");

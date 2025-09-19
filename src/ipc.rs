@@ -104,9 +104,7 @@ pub enum FS {
         file_size: u64,
         last_modified: u64,
         is_upload: bool,
-        is_resume: bool,
     },
-    SendConfirm(Vec<u8>),
     Rename {
         id: i32,
         path: String,
@@ -177,7 +175,7 @@ pub enum DataPortableService {
     Ping,
     Pong,
     ConnCount(Option<usize>),
-    Mouse((Vec<u8>, i32, String, u32, bool, bool)),
+    Mouse((Vec<u8>, i32)),
     Pointer((Vec<u8>, i32)),
     Key(Vec<u8>),
     RequestStart,
@@ -271,7 +269,7 @@ pub enum Data {
     CheckHwcodec,
     #[cfg(feature = "flutter")]
     VideoConnCount(Option<usize>),
-    // Although the key is not necessary, it is used to avoid hardcoding the key.
+    // Although the key is not neccessary, it is used to avoid hardcoding the key.
     WaylandScreencastRestoreToken((String, String)),
     HwCodecConfig(Option<String>),
     RemoveTrustedDevices(Vec<Bytes>),
@@ -289,8 +287,6 @@ pub enum Data {
     #[cfg(target_os = "windows")]
     PortForwardSessionCount(Option<usize>),
     SocksWs(Option<Box<(Option<config::Socks5Server>, String)>>),
-    #[cfg(not(any(target_os = "android", target_os = "ios")))]
-    Whiteboard((String, crate::whiteboard::CustomEvent)),
 }
 
 #[tokio::main(flavor = "current_thread")]
